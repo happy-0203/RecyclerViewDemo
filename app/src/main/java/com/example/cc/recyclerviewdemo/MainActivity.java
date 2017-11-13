@@ -62,15 +62,20 @@ public class MainActivity extends AppCompatActivity implements OkhttpUtils.IJson
         mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onLoadMore() {
+
+                int currentLoadState = mLoadMoreAdapter.getCurrentLoadState();
+                if (LoadMoreAdapter.LOAD_ERROR == currentLoadState) {
+                    return;
+                }
                 mLoadMoreAdapter.setCurrentLoadState(LoadMoreAdapter.LOADING);
-                if (mDataLists.size() < mTotalElements ){
-                    if (isLoadFinish){
+                if (mDataLists.size() < mTotalElements) {
+                    if (isLoadFinish) {
                         isLoadFinish = false;
                         initData();
                     }
 
-                }else {
-                    Log.d("MainActivity", "onLoadMore: "+mDataLists.size());
+                } else {
+                    Log.d("MainActivity", "onLoadMore: " + mDataLists.size());
                     mLoadMoreAdapter.setCurrentLoadState(LoadMoreAdapter.LOAD_END);
                 }
             }
@@ -113,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements OkhttpUtils.IJson
         mPage++;
         mGoodsBean = mGson.fromJson(result, GoodsBean.class);
         mTotalElements = mGoodsBean.getTotalElements();
-        if (mDataLists.size() == 0){
+        if (mDataLists.size() == 0) {
             mLoadMoreAdapter.setData(mGoodsBean.getContent());
-        }else {
+        } else {
             mLoadMoreAdapter.addData(mGoodsBean.getContent());
         }
         mLoadMoreAdapter.setCurrentLoadState(LoadMoreAdapter.LOAD_FINISH);
@@ -131,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements OkhttpUtils.IJson
     public void onResponeFail(String result) {
         mLoadMoreAdapter.setCurrentLoadState(LoadMoreAdapter.LOAD_ERROR);
     }
+
     //点击重试
     @Override
     public void onReloadClick() {

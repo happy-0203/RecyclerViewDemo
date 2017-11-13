@@ -160,6 +160,10 @@ public class LoadMoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    public int getCurrentLoadState(){
+        return mCurrentLoadState;
+    }
+
 
     public void setData(List<GoodsBean.ContentBean> dataList) {
         if (mDataList != null) {
